@@ -1,0 +1,14 @@
+{
+  "name": "mdlinkc",
+  "version": "0.0.1",
+  "license": "MIT",
+  "author": "Valera Rozuvan",
+  "homepage": "https://github.com/valera-rozuvan/mdlinkc",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "dependencies": {
+    "electron": "^4.0.2"
+  }
+}
