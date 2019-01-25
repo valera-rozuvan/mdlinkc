@@ -1,14 +1,22 @@
 {
   "name": "mdlinkc",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "license": "MIT",
   "author": "Valera Rozuvan",
   "homepage": "https://github.com/valera-rozuvan/mdlinkc",
-  "main": "src/main.js",
-  "scripts": {
-    "start": "electron ."
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/valera-rozuvan/mdlinkc.git"
   },
-  "dependencies": {
-    "electron": "^4.0.2"
+  "main": "bin/main.js",
+  "scripts": {
+    "tsc": "tsc",
+    "build": "tsc",
+    "clean": "rm -rf ./bin/*"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "10.12.18",
+    "typescript": "3.1.6"
   }
 }
