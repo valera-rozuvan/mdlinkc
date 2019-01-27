@@ -5,39 +5,65 @@ function isDirectory(filePath: string): boolean {
   return statSync(filePath).isDirectory();
 }
 
-function getDirectories(filePath: string): string[] {
-  return readdirSync(filePath).map((name) => {
-    return path.join(filePath, name);
-  }).filter(isDirectory);
-};
-
 function isFile(filePath: string): boolean {
   return statSync(filePath).isFile();
-};
+}
 
-function getFiles(filePath: string): string[] {
-  return readdirSync(filePath).map((name) => {
+function getFsObjects(filePath: string, fsObjType: string): string[] {
+  let fileList = null;
+
+  try {
+    fileList = readdirSync(filePath);
+  } catch (err) {
+    if (err.code === 'ENOENT') {
+      console.log(`ERROR: File or directory not found! filePath = '${filePath}'.`);
+    } else if (err.code === 'EACCES') {
+      console.log(`ERROR: Permission denied! filePath = '${filePath}'.`);
+    } else {
+      console.log(`filePath = '${filePath}'.`);
+      console.log(err);
+    }
+
+    return [];
+  }
+
+  if (!fileList || !fileList.length) {
+    return [];
+  }
+
+  const fsObjTypeToFn = {
+    file: isFile,
+    directory: isDirectory
+  }
+
+  return fileList.map((name) => {
     return path.join(filePath, name);
-  }).filter(isFile);
-};
+  }).filter(fsObjTypeToFn[fsObjType]);
+}
 
 function getFilesRecursively(filePath: string): string[] {
-  let dirs = getDirectories(filePath);
-  let files = dirs
+  const dirs = getFsObjects(filePath, 'directory');
+
+  if (!dirs || !dirs.length) {
+    return [];
+  }
+
+  const files = dirs
     // go through each directory
     .map((dir) => getFilesRecursively(dir))
     // map returns a 2d array (array of file arrays) so flatten
     .reduce((a, b) => a.concat(b), []);
 
-  return files.concat(getFiles(filePath));
-};
+  // Add files in top level directory before returning the list.
+  return files.concat(getFsObjects(filePath, 'file'));
+}
 
 function generatelistOfMdFiles(srcDir: string): string[] {
   return getFilesRecursively(srcDir)
     .filter((filePath) => {
-      const mdFileEnding = /\.md$/ig;
+      const mdFileEndingRegExp = /\.md$/ig;
 
-      return mdFileEnding.test(filePath);
+      return mdFileEndingRegExp.test(filePath);
     });
 }
 

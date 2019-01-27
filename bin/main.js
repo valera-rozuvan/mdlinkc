@@ -15,30 +15,29 @@ class Mdlinkc {
         this.srcDir = srcDir;
         this.listOfMdFiles = [];
         this.sectionToFileHash = {};
-        console.log(`srcDir = '${srcDir}'`);
-        if (path.isAbsolute(srcDir)) {
-            console.log('the specified path is absolute');
-        }
-        else {
-            console.log('the specified path is relative, converting');
-            const fullPath = path.resolve(srcDir);
-            console.log(`the full path is '${fullPath}'`);
-            this.srcDir = fullPath;
+        if (!path.isAbsolute(srcDir)) {
+            this.srcDir = path.resolve(srcDir);
         }
     }
     getLinks(section) {
         return __awaiter(this, void 0, void 0, function* () {
-            // const mainMdFile = path.join(this.srcDir, 'README.md');
-            // console.log(`mainMdFile = '${mainMdFile}'`);
-            this.listOfMdFiles = file_utils_1.generatelistOfMdFiles(this.srcDir);
-            // this.listOfMdFiles.forEach((mfDile, idx) => {
-            //   console.log(`[${idx}]: file => '${mfDile}'`);
-            // });
-            console.log(`Looking for files which contain section '${section}'.`);
+            if (this.listOfMdFiles.length === 0) {
+                this.listOfMdFiles = file_utils_1.generatelistOfMdFiles(this.srcDir);
+            }
+            if (this.listOfMdFiles.length === 0) {
+                console.log(`srcDir contains 0 '.md' files.`);
+                return [];
+            }
             const regExpStr = '^\\#+\\s' + section + '\\s*$';
-            console.log(`Section regExpStr = '${regExpStr}'.`);
-            console.log('File matches:');
             const filesWithSection = yield file_utils_1.findStrInFiles(this.listOfMdFiles, new RegExp(regExpStr, 'ig'));
+            if (filesWithSection.length === 0) {
+                console.log(`found 0 '.md' files with section.`);
+            }
+            else {
+                filesWithSection.forEach((mfDile, idx) => {
+                    console.log(`[${idx}]: file => '${mfDile}'`);
+                });
+            }
             if (!this.sectionToFileHash[section]) {
                 this.sectionToFileHash[section] = [];
             }
@@ -47,9 +46,6 @@ class Mdlinkc {
                 if (hash.indexOf(filePath) === -1) {
                     hash.push(filePath);
                 }
-            });
-            filesWithSection.forEach((mfDile, idx) => {
-                console.log(`[${idx}]: file => '${mfDile}'`);
             });
             return [
                 'link1',

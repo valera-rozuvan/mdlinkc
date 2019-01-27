@@ -14,27 +14,41 @@ function findStrInFile(filePath, searchRegExp) {
     return __awaiter(this, void 0, void 0, function* () {
         return yield new Promise((resolve) => {
             let foundMatch = false;
-            console.log('filePath => ', filePath);
             const instream = fs.createReadStream(filePath);
-            const rl = readline.createInterface({
-                input: instream,
-                terminal: false
-            });
-            rl.on('line', (line) => {
-                if (foundMatch) {
-                    return;
-                }
-                if (searchRegExp.test(line)) {
-                    foundMatch = true;
-                    rl.close();
-                    instream.destroy();
-                }
+            instream.on('ready', () => {
+                const rl = readline.createInterface({
+                    input: instream,
+                    terminal: false
+                });
+                rl.on('line', (line) => {
+                    if (foundMatch) {
+                        return;
+                    }
+                    if (searchRegExp.test(line)) {
+                        foundMatch = true;
+                        instream.destroy();
+                        rl.close();
+                    }
+                })
+                    .on('close', () => {
+                    if (!foundMatch) {
+                        instream.destroy();
+                    }
+                    resolve(foundMatch);
+                });
             })
-                .on('close', () => {
-                console.log('-------------- close');
-                if (!foundMatch) {
-                    instream.destroy();
+                .on('error', (err) => {
+                if (err.code === 'ENOENT') {
+                    console.log(`ERROR: File not found! filePath = '${filePath}'.`);
                 }
+                else if (err.code === 'EACCES') {
+                    console.log(`ERROR: Permission denied! filePath = '${filePath}'.`);
+                }
+                else {
+                    console.log(`ERROR: filePath = '${filePath}'.`);
+                    console.log(err);
+                }
+                instream.destroy();
                 resolve(foundMatch);
             });
         });
