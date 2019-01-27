@@ -12,7 +12,9 @@
   "scripts": {
     "tsc": "tsc",
     "build": "tsc",
-    "clean": "rm -rf ./bin/*"
+    "clean": "rm -rf ./bin/*",
+    "test": "node ./tests/index.js",
+    "test-clean": "npm run clean && npm run build && npm run test"
   },
   "dependencies": {},
   "devDependencies": {
