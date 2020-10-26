@@ -1,10 +1,5 @@
-function getLinks() {
-  return [
-    'link1',
-    'link2'
-  ];
-}
+import { checkIfDirExists } from './check_if_dir_exists'
 
 export const Mdlinkc = {
-  getLinks
-};
+  checkIfDirExists
+}
