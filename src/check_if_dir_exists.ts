@@ -1,6 +1,7 @@
-const fs = require('fs')
+import * as fs from 'fs'
+import * as path from 'path'
 
-function _checkIfDirExists(dirName) {
+function _checkIfDirExists(cwd, dirName) {
   let resolve = null
   let reject = null
 
@@ -9,7 +10,9 @@ function _checkIfDirExists(dirName) {
     reject = _reject
   })
 
-  fs.access(dirName, function (error) {
+  const fullPath = path.join(cwd, dirName)
+
+  fs.access(fullPath, function (error) {
     if (error) {
       reject(false)
     } else {
@@ -20,9 +23,9 @@ function _checkIfDirExists(dirName) {
   return promise
 }
 
-async function checkIfDirExists(dirName) {
+async function checkIfDirExists(cwd, dirName) {
   try {
-    await _checkIfDirExists(dirName)
+    await _checkIfDirExists(cwd, dirName)
     return true
   } catch (err) {
     return false

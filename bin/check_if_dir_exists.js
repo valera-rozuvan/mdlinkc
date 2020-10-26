@@ -8,15 +8,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const fs = require('fs');
-function _checkIfDirExists(dirName) {
+const fs = require("fs");
+const path = require("path");
+function _checkIfDirExists(cwd, dirName) {
     let resolve = null;
     let reject = null;
     const promise = new Promise((_resolve, _reject) => {
         resolve = _resolve;
         reject = _reject;
     });
-    fs.access(dirName, function (error) {
+    const fullPath = path.join(cwd, dirName);
+    fs.access(fullPath, function (error) {
         if (error) {
             reject(false);
         }
@@ -26,10 +28,10 @@ function _checkIfDirExists(dirName) {
     });
     return promise;
 }
-function checkIfDirExists(dirName) {
+function checkIfDirExists(cwd, dirName) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            yield _checkIfDirExists(dirName);
+            yield _checkIfDirExists(cwd, dirName);
             return true;
         }
         catch (err) {
