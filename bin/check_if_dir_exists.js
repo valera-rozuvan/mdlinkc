@@ -30,13 +30,14 @@ function _checkIfDirExists(cwd, dirName) {
 }
 function checkIfDirExists(cwd, dirName) {
     return __awaiter(this, void 0, void 0, function* () {
+        let status;
         try {
-            yield _checkIfDirExists(cwd, dirName);
-            return true;
+            status = yield _checkIfDirExists(cwd, dirName);
         }
         catch (err) {
-            return false;
+            status = false;
         }
+        return status;
     });
 }
 exports.checkIfDirExists = checkIfDirExists;

@@ -24,12 +24,15 @@ function _checkIfDirExists(cwd, dirName) {
 }
 
 async function checkIfDirExists(cwd, dirName) {
+  let status
+
   try {
-    await _checkIfDirExists(cwd, dirName)
-    return true
+    status = await _checkIfDirExists(cwd, dirName)
   } catch (err) {
-    return false
+    status = false
   }
+
+  return status
 }
 
 export {
