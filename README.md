@@ -2,6 +2,10 @@
 
 markdown link collection
 
+## todo
+
+In progress - a lot remains to be done. Idea is that some day this will become a GitHub app, which will allow a user to create a network of link collections. Each collection is an individual GitHub repository.
+
 ---
 
 ## license
